@@ -1,0 +1,75 @@
+Implement strStr().
+Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+Example 1:
+Input: haystack = "hello", needle = "ll"
+Output: 2
+
+Example 2:
+Input: haystack = "aaaaa", needle = "bba"
+Output: -1
+
+---
+## 思路：
+strStr( ) 这个方法在 JS 中对应的实际就是 indexOf方法。
+返回变量index置零（❌-1），
+最简单的遍历 haystack，匹配 needle 的第一个元素，匹配上了之后，index 保存当前 haystack 下标，之后继续匹配 needle 剩余元素；若未匹配上，index 重新置零（❌-1）。
+
+首次提交
+```javascript
+var strStr = function(haystack, needle) {
+    var index = 0;
+    for (var i = 0; i < haystack.length; i++) {
+        if (haystack[i] === needle[0]) {
+            index = i;
+            for (var j = 1; j < needle.length; j++) {
+                if (haystack[i + j] !== needle[j]) {
+                    index = 0;
+                    break;
+                }
+            }
+        }
+        if (index !== 0) {
+            return index;
+        }
+    }
+    return index;
+};
+```
+
+1. 🌚第一次提交未考虑 haystack= ‘’, needle = ‘’的情况；
+
+2. 🐷index 初始值不能为零，否则从第一个元素开始匹配上的会被认为未匹配，应置为-1；
+
+3. ⏱修改提交，time limit exceeded，case 为 输入输出都为一亿位的 a；
+
+偷看了他人答案，性能瓶颈在于 haystack完全不用遍历完，只用遍历到 h.length - n.length + 1的位置即可；
+所以最终代码为
+
+
+Solution：
+```javascript
+/**
+ * @param {string} haystack
+ * @param {string} needle
+ * @return {number}
+ */
+var strStr = function(haystack, needle) {
+    if (needle === '') return 0;
+    var index = -1;
+    for (var i = 0; i < haystack.length - needle.length + 1; i++) {
+        if (haystack[i] === needle[0]) {
+            index = i;
+            for (var j = 1; j < needle.length; j++) {
+                if (haystack[i + j] !== needle[j]) {
+                    index = -1;
+                    break;
+                }
+            }
+        }
+        if (index !== -1) {
+            return index;
+        }
+    }
+    return index;
+};
+```
