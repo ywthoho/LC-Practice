@@ -12,22 +12,30 @@
  */
 var threeSumClosest = function(nums, target) {
     nums.sort((a,b) => a - b);
-    let res = nums[0] + nums[1] + nums[2];
-    for (let i = 0; i < nums.length - 2; i++) {
+    let diff = Infinity;
+    for (let i = 0; i < nums.length; i++) {
         let j = i + 1;
         let k = nums.length - 1;
         while (j < k) {
-            let sum = nums[i] + nums[j] + nums[k];
-            if (sum === target) return sum;
-            let diff = sum - target;
-            if (Math.abs(diff) < Math.abs(res - target)) {
-                res = sum;
+            const currentSum = nums[i] + nums[j] + nums[k];
+            if (currentSum == target) return target;
+
+            else if (currentSum < target) {
+                if (target - currentSum < Math.abs(diff)) {
+                    diff = target - currentSum;
+                    
+                }
+                j ++;
+            } else {
+                if (currentSum - target < Math.abs(diff)) {
+                    diff = target - currentSum;
+                }
+                k --
             }
-            if (diff < 0) j++;
-            else k--;
         }
     }
-    return res;
+    return target - diff;
+
 };
 // @lc code=end
 
